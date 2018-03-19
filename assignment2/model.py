@@ -86,8 +86,16 @@ class Model(object):
         Returns:
             loss: loss over the batch (a scalar)
         """
+
         feed = self.create_feed_dict(inputs_batch, labels_batch=labels_batch)
-        _, loss = sess.run([self.train_op, self.loss], feed_dict=feed)
+        ops = [self.train_op, self.loss]
+        if hasattr(self, 'summaries'):
+            ops.append(self.summaries)
+            _, loss, summary = sess.run(ops, feed_dict=feed)
+            self.summary_writer.add_summary(summary, self.epoch)
+        else:
+            _, loss = sess.run(ops, feed_dict=feed)
+        self.epoch += 1
         return loss
 
     def predict_on_batch(self, sess, inputs_batch):
@@ -108,3 +116,4 @@ class Model(object):
         self.pred = self.add_prediction_op()
         self.loss = self.add_loss_op(self.pred)
         self.train_op = self.add_training_op(self.loss)
+        self.epoch = 0

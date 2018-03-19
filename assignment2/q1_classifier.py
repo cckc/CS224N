@@ -116,6 +116,7 @@ class SoftmaxModel(Model):
         """
         ### YOUR CODE HERE
         loss = cross_entropy_loss(self.labels_placeholder, pred)
+        tf.summary.scalar('loss', loss)
         ### END YOUR CODE
         return loss
 
@@ -205,6 +206,9 @@ def test_softmax_model():
         # Build the model and add the variable initializer op
         model = SoftmaxModel(config)
         init_op = tf.global_variables_initializer()
+
+        model.summaries = tf.summary.merge_all()
+        model.summary_writer = tf.summary.FileWriter('./tensorboard', graph)
     # Finalizing the graph causes tensorflow to raise an exception if you try to modify the graph
     # further. This is good practice because it makes explicit the distinction between building and
     # running the graph.
@@ -214,8 +218,10 @@ def test_softmax_model():
     with tf.Session(graph=graph) as sess:
         # Run the op to initialize the variables.
         sess.run(init_op)
+
         # Fit the model
         losses = model.fit(sess, inputs, labels)
+
 
     # If ops are implemented correctly, the average loss should fall close to zero
     # rapidly.
