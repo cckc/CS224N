@@ -21,6 +21,9 @@ class PartialParse(object):
         self.sentence = sentence
 
         ### YOUR CODE HERE
+        self.stack = ["ROOT"]
+        self.buffer = [w for w in sentence]
+        self.dependencies = []
         ### END YOUR CODE
 
     def parse_step(self, transition):
@@ -32,6 +35,18 @@ class PartialParse(object):
                         transition.
         """
         ### YOUR CODE HERE
+        if transition == "S":
+            self.stack.append(self.buffer[0])
+            self.buffer = self.buffer[1:]
+        elif transition == "LA":
+            self.dependencies.append((self.stack[-1], self.stack[-2]))
+            self.stack[-2] = self.stack[-1]
+            self.stack = self.stack[:-1]
+        elif transition == "RA":
+            self.dependencies.append((self.stack[-2], self.stack[-1]))
+            self.stack = self.stack[:-1]
+        else:
+            raise Exception()
         ### END YOUR CODE
 
     def parse(self, transitions):
@@ -66,6 +81,20 @@ def minibatch_parse(sentences, model, batch_size):
     """
 
     ### YOUR CODE HERE
+    dependencies = [None] * len(sentences)
+    pps = [(i, PartialParse(sentences[i])) for i in range(len(sentences))]
+    while len(pps):
+        batch = pps[:batch_size]
+        transitions = model.predict([pp for (_, pp) in batch])
+        for ((_, pp), trans) in zip(batch, transitions):
+            pp.parse_step(trans)
+        pps = pps[batch_size:]
+        for i in range(len(batch) - 1, -1, -1):
+            idx, pp = batch[i]
+            if len(pp.stack) == 1 and len(pp.buffer) == 0:
+                dependencies[idx] = pp.dependencies
+            else:
+                pps.insert(0, batch[i])
     ### END YOUR CODE
 
     return dependencies
