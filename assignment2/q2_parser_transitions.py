@@ -22,7 +22,7 @@ class PartialParse(object):
 
         ### YOUR CODE HERE
         self.stack = ["ROOT"]
-        self.buffer = [w for w in sentence]
+        self.buffer = sentence[:]
         self.dependencies = []
         ### END YOUR CODE
 
@@ -37,14 +37,13 @@ class PartialParse(object):
         ### YOUR CODE HERE
         if transition == "S":
             self.stack.append(self.buffer[0])
-            self.buffer = self.buffer[1:]
+            self.buffer.pop(0)
         elif transition == "LA":
             self.dependencies.append((self.stack[-1], self.stack[-2]))
-            self.stack[-2] = self.stack[-1]
-            self.stack = self.stack[:-1]
+            self.stack.pop(-2)
         elif transition == "RA":
             self.dependencies.append((self.stack[-2], self.stack[-1]))
-            self.stack = self.stack[:-1]
+            self.stack.pop(-1)
         else:
             raise Exception()
         ### END YOUR CODE
