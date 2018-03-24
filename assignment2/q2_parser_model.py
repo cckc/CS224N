@@ -145,10 +145,15 @@ class ParserModel(Model):
         hidden_size = self.config.hidden_size
         n_classes = self.config.n_classes
 
-        W = tf.Variable(xavier((n_features * embed_size, hidden_size)))
-        b1 = tf.Variable(xavier((1, hidden_size)))
-        U = tf.Variable(xavier((hidden_size, n_classes)))
-        b2 = tf.Variable(xavier((1, n_classes)))
+        W = tf.Variable(xavier([n_features * embed_size, hidden_size]))
+        b1 = tf.random_uniform([hidden_size]) # Initialization MATTERS! float in range of [0, 1)
+        # WRONG! shouldn't use Xavier, the training will stuck in local minima,
+        # because b1 will be close to 0?
+        # b1 = tf.Variable(xavier([hidden_size])) 
+        # b1 = tf.Variable(xavier([1, hidden_size])) # WRONG SHAPE!
+        U = tf.Variable(xavier([hidden_size, n_classes]))
+        # b2 = tf.Variable(xavier([n_classes])) # WRONG! shouldn't use Xavier
+        b2 = tf.random_uniform([n_classes])
 
         z = tf.matmul(x, W) + b1
         h = tf.nn.relu(z)

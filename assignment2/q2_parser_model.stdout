@@ -1,0 +1,86 @@
+================================================================================
+INITIALIZING
+================================================================================
+Loading data... took 2.34 seconds
+Building parser... took 1.43 seconds
+Loading pretrained embeddings... took 2.52 seconds
+Vectorizing data... took 1.92 seconds
+Preprocessing training data... took 49.68 seconds
+WARNING:tensorflow:From q2_parser_model.py:177: softmax_cross_entropy_with_logits (from tensorflow.python.ops.nn_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+
+Future major versions of TensorFlow will allow gradients to flow
+into the labels input on backprop by default.
+
+See tf.nn.softmax_cross_entropy_with_logits_v2.
+
+Building model... took 0.27 seconds
+
+2018-03-24 21:21:07.506809: I tensorflow/core/platform/cpu_feature_guard.cc:140] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+================================================================================
+TRAINING
+================================================================================
+Epoch 1 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 49s 27ms/step - train loss: 0.2250
+
+Evaluating on dev set - dev UAS: 81.57
+New best dev UAS! Saving model in ./data/weights/parser.weights
+
+Epoch 2 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 48s 26ms/step - train loss: 0.1241
+
+Evaluating on dev set - dev UAS: 85.23
+New best dev UAS! Saving model in ./data/weights/parser.weights
+
+Epoch 3 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 50s 27ms/step - train loss: 0.1066
+
+Evaluating on dev set - dev UAS: 86.14
+New best dev UAS! Saving model in ./data/weights/parser.weights
+
+Epoch 4 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 52s 28ms/step - train loss: 0.0972
+
+Evaluating on dev set - dev UAS: 86.77
+New best dev UAS! Saving model in ./data/weights/parser.weights
+
+Epoch 5 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 51s 28ms/step - train loss: 0.0901
+
+Evaluating on dev set - dev UAS: 87.62
+New best dev UAS! Saving model in ./data/weights/parser.weights
+
+Epoch 6 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 47s 25ms/step - train loss: 0.0849
+
+Evaluating on dev set - dev UAS: 87.51
+
+Epoch 7 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 47s 25ms/step - train loss: 0.0809
+
+Evaluating on dev set - dev UAS: 87.59
+
+Epoch 8 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 67s 36ms/step - train loss: 0.0768
+
+Evaluating on dev set - dev UAS: 87.96
+New best dev UAS! Saving model in ./data/weights/parser.weights
+
+Epoch 9 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 51s 27ms/step - train loss: 0.0735
+
+Evaluating on dev set - dev UAS: 87.61
+
+Epoch 10 out of 10
+1848/1848 [==============================]1848/1848 [==============================] - 52s 28ms/step - train loss: 0.0705
+
+Evaluating on dev set - dev UAS: 88.42
+New best dev UAS! Saving model in ./data/weights/parser.weights
+
+================================================================================
+TESTING
+================================================================================
+Restoring the best model weights found on the dev set
+Final evaluation on test set - test UAS: 88.67
+Writing predictions
+Done!

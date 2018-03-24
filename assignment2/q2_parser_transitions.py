@@ -80,20 +80,42 @@ def minibatch_parse(sentences, model, batch_size):
     """
 
     ### YOUR CODE HERE
-    dependencies = [None] * len(sentences)
-    pps = [(i, PartialParse(sentences[i])) for i in range(len(sentences))]
-    while len(pps):
-        batch = pps[:batch_size]
-        transitions = model.predict([pp for (_, pp) in batch])
-        for ((_, pp), trans) in zip(batch, transitions):
-            pp.parse_step(trans)
-        pps = pps[batch_size:]
-        for i in range(len(batch) - 1, -1, -1):
-            idx, pp = batch[i]
-            if len(pp.stack) == 1 and len(pp.buffer) == 0:
-                dependencies[idx] = pp.dependencies
-            else:
-                pps.insert(0, batch[i])
+    #dependencies = [None] * len(sentences)
+    #pps = [(i, PartialParse(sentences[i])) for i in range(len(sentences))]
+    #while len(pps):
+    #    batch = pps[:batch_size]
+    #    transitions = model.predict([pp for (_, pp) in batch])
+    #    for ((_, pp), trans) in zip(batch, transitions):
+    #        pp.parse_step(trans)
+    #    pps = pps[batch_size:]
+    #    for i in range(len(batch) - 1, -1, -1):
+    #        idx, pp = batch[i]
+    #        if len(pp.stack) == 1 and len(pp.buffer) == 0:
+    #            dependencies[idx] = pp.dependencies
+    #        else:
+    #            pps.insert(0, batch[i])
+
+    # the following implementation is cleaner than the above one
+    # refer: https://github.com/hankcs/CS224n/blob/master/assignment2/q2_parser_transitions.py
+    partial_parses = [PartialParse(s) for s in sentences]
+
+    unfinished_parse = partial_parses
+
+    while len(unfinished_parse) > 0:
+        minibatch = unfinished_parse[0:batch_size]
+        # perform transition and single step parser on the minibatch until it is empty
+        while len(minibatch) > 0:
+            transitions = model.predict(minibatch)
+            for index, action in enumerate(transitions):
+                minibatch[index].parse_step(action)
+            minibatch = [parse for parse in minibatch if len(parse.stack) > 1 or len(parse.buffer) > 0]
+
+        # move to the next batch
+        unfinished_parse = unfinished_parse[batch_size:]
+
+    dependencies = []
+    for n in range(len(sentences)):
+        dependencies.append(partial_parses[n].dependencies)
     ### END YOUR CODE
 
     return dependencies
