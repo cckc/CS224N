@@ -35,7 +35,7 @@ class Config:
     TODO: Fill in what n_window_features should be, using n_word_features and window_size.
     """
     n_word_features = 2 # Number of features for every word in the input.
-    window_size = 1 # The size of the window to use.
+    window_size = 0 # The size of the window to use.
     ### YOUR CODE HERE
     n_window_features = (window_size * 2 + 1) * n_word_features # The total number of features used for each window.
     ### END YOUR CODE
