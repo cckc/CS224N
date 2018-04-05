@@ -3,3 +3,4 @@
 *.pyc
 __pycache__/
 assignment3/results/
+assignment3/*.png
